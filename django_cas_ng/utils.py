@@ -12,11 +12,12 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.sessions.backends.base import SessionBase
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
 from django.shortcuts import resolve_url
 
 
-class RedirectException(Exception):
+class RedirectException(PermissionDenied):
     """Signals that a redirect could not be handled."""
     pass
 
