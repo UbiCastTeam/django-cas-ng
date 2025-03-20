@@ -5,4 +5,3 @@ lxml>=3.4
 #-e git+https://github.com/python-cas/python-cas.git#egg=python_cas
 python-cas>=1.6.0
 requests>=2.0.0
-flake8>=6.1.0
