@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-
-import codecs
-
 from setuptools import setup
 
-with codecs.open('README.rst', encoding='utf-8') as f:
+with open('README.rst', encoding='utf-8') as f:
     readme = f.read()
 
 setup(
@@ -32,7 +29,7 @@ setup(
     ],
     description='Django CAS 1.0/2.0/3.0 client authentication library, support Django 4.2+ and Python 3.10+',
     keywords=['django', 'cas', 'cas2', 'cas3', 'client', 'sso', 'single sign-on', 'Central Authentication Service', 'authentication', 'auth'],
-    license='BSD',
+    license='MIT License',
     long_description=readme,
     name='django-cas-ng',
     packages=['django_cas_ng', 'django_cas_ng.management', 'django_cas_ng.management.commands', 'django_cas_ng.migrations'],
@@ -50,5 +47,4 @@ setup(
         'Django>=4.2',
         'python-cas>=1.6.0',
     ],
-    zip_safe=False,  # dot not package as egg or django will not found management commands
 )
