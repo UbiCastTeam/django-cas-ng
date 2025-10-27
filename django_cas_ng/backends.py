@@ -66,8 +66,7 @@ class CASBackend(ModelBackend):
                 user_kwargs['id'] = self.get_user_id(attributes)
 
             user, created = UserModel._default_manager.get_or_create(**user_kwargs)
-            if created:
-                user = self.configure_user(user)
+            user = self.configure_user(user, attributes, created)
         else:
             created = False
             try:
@@ -199,7 +198,9 @@ class CASBackend(ModelBackend):
                 "Valid values are `'lower'`, `'upper'`, and `None`.")
         return username
 
-    def configure_user(self, user: User) -> User:
+    def configure_user(
+        self, user: User, attributes: Mapping[str, str], created: bool
+    ) -> User:
         """
         Configures a user after creation and returns the updated user.
 
