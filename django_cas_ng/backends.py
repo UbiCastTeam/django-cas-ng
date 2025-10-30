@@ -1,5 +1,6 @@
 """CAS authentication backend"""
 
+import logging
 from typing import Mapping, Optional
 
 from django.conf import settings
@@ -7,13 +8,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
+from django.utils.translation import gettext as _
 
 from django_cas_ng.signals import cas_user_authenticated
 
 from .utils import get_cas_client
 
 __all__ = ['CASBackend']
+
+logger = logging.getLogger(__name__)
 
 
 class CASBackend(ModelBackend):
@@ -26,7 +31,15 @@ class CASBackend(ModelBackend):
         :returns: [User] Authenticated User object or None if authenticate failed.
         """
         client = get_cas_client(service_url=service, request=request)
-        username, attributes, pgtiou = client.verify_ticket(ticket)
+        try:
+            username, attributes, pgtiou = client.verify_ticket(ticket)
+        except Exception as err:
+            logger.error('Error during CAS authentication: %s', err)
+            raise PermissionDenied(_(
+                'Your request was rejected because the CAS authentication failed.\n'
+                'Please retry and if the problem persists, contact your administrators.'
+            )) from err
+
         if attributes and request:
             request.session['attributes'] = attributes
 
